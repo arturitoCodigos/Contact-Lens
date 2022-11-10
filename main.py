@@ -24,7 +24,7 @@ def create_dataset(folder_path):
     return np.array(colored), np.array(normal), np.array(transparent)
 
 if __name__ == "__main__":
-    c, n, t = create_dataset("imgs")
+    c, n, t = create_dataset("/media/work/datasets/contact-lens/orig/IIITD_Contact_Lens_Iris_DB/Cogent Scanner")
     print(c.shape)
     print(n.shape)
     print(t.shape)
