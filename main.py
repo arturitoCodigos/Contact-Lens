@@ -5,6 +5,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras import layers
 from sklearn.model_selection import train_test_split
 from cv2 import imread, resize
+from math import floor
 
 def read_dir(path):
     result = []
@@ -41,7 +42,7 @@ def create_dataset(folder_path, info=False):
 # 1 -> Colored
 # 2 -> Normal
 # 3 -> Transparent 
-def lens_dataset(folder_path="/media/work/datasets/contact-lens/orig/IIITD_Contact_Lens_Iris_DB/Cogent Scanner"):
+def lens_dataset(folder_path="/media/work/datasets/contact-lens/crop/IIITD_Contact_Lens_Iris_DB/Cogent Scanner"):
     c, n, t = create_dataset(folder_path)
     features = np.concatenate((c, n, t))
     labels = np.array([[1, 0, 0] for _ in range(c.shape[0])] + [[0, 1, 0] for _ in range(n.shape[0])] + [[0, 0, 1] for _ in range(t.shape[0])]) # One-Hot
@@ -50,10 +51,18 @@ def lens_dataset(folder_path="/media/work/datasets/contact-lens/orig/IIITD_Conta
 if __name__ == "__main__":
     # Carregando o dataset
     features, labels = lens_dataset()
-    x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.33, random_state=23, shuffle=True)
+
+    # x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.33, random_state=23, shuffle=True)
+
+    f_size, l_size = len(features), len(labels) # Sao iguais, apenas para melhor leitura do codigo
+
+    # Split como indicado pela propria database
+    x_train, y_train = features[0:(floor(0.5*f_size))], labels[0:(floor(0.5*l_size))]
+    x_test, y_test = features[(floor(0.5*f_size)+1):], labels[(floor(0.5*f_size)+1):]
     
     # Neural Net em si
 
+    """
     # Camada para augmentação de imagem
     img_augmentation = Sequential(
         [
@@ -64,11 +73,12 @@ if __name__ == "__main__":
         ],
         name="img_augmentation",
     )
+    """
 
     # Modelo 1 --> Soprado da documentação do keras
 
     inputs = tf.keras.layers.Input(shape=(224,224,3))
-    pre_treinada_saida = img_augmentation(inputs)
+    pre_treinada_saida = inputs
     neuralNet = tf.keras.applications.EfficientNetB0(weights="imagenet", input_tensor=pre_treinada_saida, include_top=False)
 
     neuralNet.trainable = False # O modelo base nao treina
