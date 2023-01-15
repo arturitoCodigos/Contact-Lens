@@ -20,7 +20,7 @@ def readDir(path="./imgs", info=True):
         if info:
             if (i%100 == 0):
                 print(f"Estamos no arquivo numero {i}!")
-                i+=1
+            i+=1
     return np.array(features), np.array(labels)
 
 if __name__ == "__main__":

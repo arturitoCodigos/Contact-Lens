@@ -20,7 +20,7 @@ def readDir(path="./imgs", info=True):
         if info:
             if (i%100 == 0):
                 print(f"Estamos no arquivo numero {i}!")
-                i+=1
+            i+=1
     return np.array(features), np.array(labels)
 
 def divideLabels(labels, info=True):
@@ -41,7 +41,7 @@ def divideLabels(labels, info=True):
         if info:
             if (i%100 == 0):
                 print(f"Estamos no arquivo numero {i}!")
-                i+=1
+            i+=1
     return np.array(o1), np.array(o2), np.array(o3), np.array(o4), np.array(o5), np.array(o6), np.array(o7), np.array(o8), np.array(o9)
 
 
