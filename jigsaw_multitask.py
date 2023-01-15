@@ -1,6 +1,6 @@
 import os
 import numpy as np
-#import tensorflow as tf
+import tensorflow as tf
 from cv2 import imread
 from sklearn.model_selection import train_test_split
 
