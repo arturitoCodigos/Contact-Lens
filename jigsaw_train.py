@@ -7,12 +7,20 @@ from sklearn.model_selection import train_test_split
 def toInt(s):
     return int(s)
 
-def readDir(path="/imgs"):
+def readDir(path="./imgs", info=True):
     features, labels = [], []
     files = os.listdir(path)
+    if info:
+        print(f"Sao {len(files)} arquivos a serem lidos!")
+        i = 0
     for img_name in files:
-        features.append(imread(img_name))
+        features.append(imread(os.path.join(path, img_name)))
+        img_name = os.path.splitext(img_name)[0]
         labels.append(list(map(toInt, img_name.split("-"))))
+        if info:
+            if (i%100 == 0):
+                print(f"Estamos no arquivo numero {i}!")
+                i+=1
     return np.array(features), np.array(labels)
 
 if __name__ == "__main__":

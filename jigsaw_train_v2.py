@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 def toInt(s):
     return int(s)
 
-def readDir(path="/imgs"):
+def readDir(path="./imgs"):
     features, labels = [], []
     files = os.listdir(path)
     for img_name in files:
