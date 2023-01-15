@@ -45,8 +45,8 @@ def divideLabels(labels, info=True):
     return np.array(o1), np.array(o2), np.array(o3), np.array(o4), np.array(o5), np.array(o6), np.array(o7), np.array(o8), np.array(o9)
 
 
-def create_branch(name):
-    branch = tf.keras.layers.Dense(1024, activation='relu')
+def create_branch(base_model, name):
+    branch = tf.keras.layers.Dense(1024, activation='relu')(base_model)
     branch = tf.keras.layers.Dense(512, activation='relu')(branch)
     branch = tf.keras.layers.Dense(256, activation='relu')(branch)
     branch = tf.keras.layers.Dense(128, activation='relu')(branch)
@@ -70,15 +70,15 @@ if __name__ == "__main__":
     main_branch = tf.keras.applications.EfficientNetB0(weights="imagenet", input_tensor=pre_treinada_saida, include_top=False)
     main_branch.trainable = True # O modelo base treina?
 
-    out1 = create_branch('out1')
-    out2 = create_branch('out2')
-    out3 = create_branch('out3')
-    out4 = create_branch('out4')
-    out5 = create_branch('out5')
-    out6 = create_branch('out6')
-    out7 = create_branch('out7')
-    out8 = create_branch('out8')
-    out9 = create_branch('out9')
+    out1 = create_branch(main_branch, 'out1')
+    out2 = create_branch(main_branch, 'out2')
+    out3 = create_branch(main_branch, 'out3')
+    out4 = create_branch(main_branch, 'out4')
+    out5 = create_branch(main_branch, 'out5')
+    out6 = create_branch(main_branch, 'out6')
+    out7 = create_branch(main_branch, 'out7')
+    out8 = create_branch(main_branch, 'out8')
+    out9 = create_branch(main_branch, 'out9')
 
     # Construção do modelo
     neuralNet = tf.keras.Model(main_branch, outputs=[out1, out2, out3, 
