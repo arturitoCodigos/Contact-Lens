@@ -70,6 +70,7 @@ if __name__ == "__main__":
     main_branch = tf.keras.applications.EfficientNetB0(weights="imagenet", input_tensor=pre_treinada_saida, include_top=False)
     main_branch.trainable = True # O modelo base treina?
     main_branch = tf.keras.layers.GlobalAveragePooling2D()(main_branch.output)
+    main_branch = tf.keras.layers.BatchNormalization()(main_branch)
 
     out1 = create_branch(main_branch, 'out1')
     out2 = create_branch(main_branch, 'out2')
