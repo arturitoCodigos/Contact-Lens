@@ -46,12 +46,7 @@ def divideLabels(labels, info=True):
 
 
 def create_branch(base_model, name):
-    branch = tf.keras.layers.Dense(1024, activation='relu')(base_model)
-    branch = tf.keras.layers.Dense(512, activation='relu')(branch)
-    branch = tf.keras.layers.Dense(256, activation='relu')(branch)
-    branch = tf.keras.layers.Dense(128, activation='relu')(branch)
-    branch = tf.keras.layers.Dense(9, activation='softmax', name=name)(branch)
-    return branch
+    return tf.keras.layers.Dense(9, activation='softmax', name=name)(base_model)
 
 if __name__ == "__main__":
     # Carregando o dataset
@@ -71,6 +66,10 @@ if __name__ == "__main__":
     main_branch.trainable = True # O modelo base treina?
     main_branch = tf.keras.layers.GlobalAveragePooling2D()(main_branch.output)
     main_branch = tf.keras.layers.BatchNormalization()(main_branch)
+    main_branch = tf.keras.layers.Dense(1024, activation='relu')(main_branch)
+    main_branch = tf.keras.layers.Dense(512, activation='relu')(main_branch)
+    main_branch = tf.keras.layers.Dense(256, activation='relu')(main_branch)
+    main_branch = tf.keras.layers.Dense(128, activation='relu')(main_branch)
 
     out1 = create_branch(main_branch, 'out1')
     out2 = create_branch(main_branch, 'out2')
