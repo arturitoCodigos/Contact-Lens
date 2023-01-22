@@ -2,6 +2,8 @@ import os
 import numpy as np
 from cv2 import imread, resize, imwrite
 
+uuid = 0
+
 three_way_partition = [[0, 1, 2, 
                         3, 4, 5, 
                         6, 7, 8],
@@ -91,7 +93,7 @@ def create_dataset(folder_path, info=False):
         for j in iterables:
             imgs, lbls = j
             for img, lbl in zip(imgs,lbls):
-                lbl = "-".join(list(map(toStr, lbl))) + ".png"
+                lbl = str(uuid) + '=' + "-".join(list(map(toStr, lbl))) + ".png"
                 imwrite("./three_way_dataset/" + lbl, img)
             
         # Info
@@ -100,4 +102,4 @@ def create_dataset(folder_path, info=False):
             print(f"{(i/total)*100}% concluido!")
 
 if __name__ == "__main__":
-    create_dataset("./media/work/datasets/contact-lens/crop/IIITD/Cogent Scanner")
+    create_dataset("/media/work/datasets/contact-lens/crop/IIITD/Cogent Scanner")

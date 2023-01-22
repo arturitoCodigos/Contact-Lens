@@ -16,7 +16,7 @@ def readDir(path="./imgs", info=True):
     for img_name in files:
         features.append(imread(os.path.join(path, img_name)))
         img_name = os.path.splitext(img_name)[0]
-        labels.append(list(map(oneHot, img_name.split("-"))))
+        labels.append(list(map(oneHot, img_name.split("=")[1].split("-"))))
         if info:
             if (i%100 == 0):
                 print(f"Estamos no arquivo numero {i}!")
