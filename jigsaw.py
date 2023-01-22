@@ -92,7 +92,7 @@ def create_dataset(folder_path, info=False):
         for j in iterables:
             for i in j:
                 img = i[0]
-                lbl = i[1].join("-") + ".png"
+                lbl = "-".join(i[1]) + ".png"
                 imsave("./three_way_dataset/" + lbl, img)
             
         # Info
