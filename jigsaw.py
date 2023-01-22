@@ -3,13 +3,34 @@ import numpy as np
 import tensorflow as tf
 #from tensorflow.keras.models import Sequential
 #from tensorflow.keras import layers
-from sklearn.model_selection import train_test_split
 from cv2 import imread, resize
-from random import sample, seed
-
-from PIL import Image
+from matplotlib.pyplot import imsave
 
 seed(10) # Reproducibilidade dos experimentos!
+
+three_way_partition = [[0, 1, 2, 
+                        3, 4, 5, 
+                        6, 7, 8],
+
+                       [0, 2, 1,
+                        3, 5, 4,
+                        6, 8, 7],
+                        
+                       [1, 0, 2,
+                        4, 3, 5,
+                        7, 6, 8],
+                        
+                       [1, 2, 0,
+                        4, 5, 3,
+                        7, 8, 6],
+
+                       [2, 0, 1,
+                        5, 3, 4,
+                        8, 6, 7],
+
+                       [2, 1, 0,
+                        5, 4, 3,
+                        8, 7, 6]]
 
 # ((linhas), (colunas))
 limits = [((000, 100), (000, 100)),
@@ -28,9 +49,9 @@ def read_dir(path, multiplier=1):
         img = imread(os.path.join(path, img))
         res = resize(img, dsize=(300, 300))
 
-        for _ in range(multiplier):
+        for arrangement in three_way_partition:
             # Jigsaw shuffle
-            label = sample(range(0,9), k=9)
+            label = arrangement
             new_img = np.zeros((300, 300, 3), dtype=np.uint8)
 
             for i, i_label in enumerate(label):
@@ -53,9 +74,6 @@ def read_dir(path, multiplier=1):
     return imgs, lbls
 
 def create_dataset(folder_path, info=False):
-    colored, normal, transparent = [], [], []
-    colored_lbl, normal_lbl, transparent_lbl = [], [], []
-
     # Informativo do load
     i = 0
     total = len(os.listdir(folder_path))
@@ -71,62 +89,18 @@ def create_dataset(folder_path, info=False):
         p2 = read_dir(path2)
         p3 = read_dir(path3)
 
-        colored     += p1[0]
-        normal      += p2[0]
-        transparent += p3[0]
+        iterables = [p1, p2, p3]
 
-        colored_lbl     += p1[1]
-        normal_lbl      += p2[1]
-        transparent_lbl += p3[1]
-
+        for j in iterables:
+            for i in j:
+                img = i[0]
+                lbl = i[1].join("-") + ".png"
+                imsave("./three_way_dataset/" + lbl, img)
+            
         # Info
         i+=1
         if (i % 100 == 0):
             print(f"{(i/total)*100}% concluido!")
-    
-    return (np.array(colored), np.array(normal), np.array(transparent)), (np.array(colored_lbl), np.array(normal_lbl), np.array(transparent_lbl))
-
-# 1 -> Colored
-# 2 -> Normal
-# 3 -> Transparent 
-def lens_dataset(folder_path="/media/work/datasets/contact-lens/orig/IIITD_Contact_Lens_Iris_DB/Cogent Scanner"):
-    features, labels = create_dataset(folder_path)
-    c, n, t = features
-    c_lbl, n_lbl, t_lbl = labels
-
-    f_conc = np.concatenate((c, n, t))
-    l_conc = np.concatenate((c_lbl, n_lbl, t_lbl))
-    return f_conc, l_conc
 
 if __name__ == "__main__":
-    # Carregando o dataset
-    features, labels = lens_dataset()
-
-    x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.33, random_state=23, shuffle=True)
-
-    # Neural Net em si
-
-    # Modelo 1 --> Soprado da documentação do keras
-
-    inputs = tf.keras.layers.Input(shape=(300,300,3))
-    pre_treinada_saida = inputs
-    neuralNet = tf.keras.applications.EfficientNetB0(weights="imagenet", input_tensor=pre_treinada_saida, include_top=False)
-
-    neuralNet.trainable = False # O modelo base nao treina
-
-    pre_treinada_saida = tf.keras.layers.GlobalAveragePooling2D()(neuralNet.output)
-    pre_treinada_saida = tf.keras.layers.BatchNormalization()(pre_treinada_saida)
-    pre_treinada_saida = tf.keras.layers.Dropout(0.2)(pre_treinada_saida)
-    out = tf.keras.layers.Dense(9, activation="softmax")(pre_treinada_saida)  # Output
-
-    # Construção do modelo
-    neuralNet = tf.keras.Model(inputs, out)
-
-    #neuralNet.summary() # Resumo da rede
-
-    neuralNet.compile(loss="categorical_crossentropy",
-                      optimizer=tf.keras.optimizers.Adam(),
-                      metrics=["accuracy"])
-    
-    neuralNet.fit(x_train, y_train, epochs=40, validation_data=(x_test, y_test), verbose=1)
-    neuralNet.save("./contact-lens-model-effnetb0")
+    create_dataset("/media/work/datasets/contact-lens/orig/IIITD_Contact_Lens_Iris_DB/Cogent Scanner")

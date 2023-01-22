@@ -5,7 +5,7 @@ import tensorflow as tf
 #from tensorflow.keras import layers
 from sklearn.model_selection import train_test_split
 from cv2 import imread, resize
-from math import floor
+
 
 def read_dir(path):
     result = []

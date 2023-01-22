@@ -98,7 +98,18 @@ if __name__ == "__main__":
                             'out6' : 'categorical_crossentropy',
                             'out7' : 'categorical_crossentropy',
                             'out8' : 'categorical_crossentropy',
-                            'out9' : 'categorical_crossentropy',
+                            'out9' : 'categorical_crossentropy'
+                        },
+                        loss_weights={
+                            'out1' : 0.11,
+                            'out2' : 0.11, 
+                            'out3' : 0.11,
+                            'out4' : 0.11,
+                            'out5' : 0.11,
+                            'out6' : 0.11,
+                            'out7' : 0.11,
+                            'out8' : 0.11,
+                            'out9' : 0.11
                         },
                         optimizer=tf.keras.optimizers.Adam(),
                         metrics=["accuracy"])
