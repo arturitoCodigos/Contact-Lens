@@ -6,8 +6,6 @@ import tensorflow as tf
 from cv2 import imread, resize
 from matplotlib.pyplot import imsave
 
-seed(10) # Reproducibilidade dos experimentos!
-
 three_way_partition = [[0, 1, 2, 
                         3, 4, 5, 
                         6, 7, 8],
