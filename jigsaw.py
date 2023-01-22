@@ -1,10 +1,6 @@
 import os
 import numpy as np
-import tensorflow as tf
-#from tensorflow.keras.models import Sequential
-#from tensorflow.keras import layers
-from cv2 import imread, resize
-from matplotlib.pyplot import imsave
+from cv2 import imread, resize, imwrite
 
 three_way_partition = [[0, 1, 2, 
                         3, 4, 5, 
@@ -41,6 +37,9 @@ limits = [((000, 100), (000, 100)),
           ((200, 300), (100, 200)),
           ((200, 300), (200, 300)),]
 
+def toStr(s):
+    return str(s)
+
 def read_dir(path, multiplier=1):
     imgs, lbls = [], []
     for img in os.listdir(path):
@@ -69,7 +68,7 @@ def read_dir(path, multiplier=1):
                     c_label_min = t
             imgs.append(list(new_img))
             lbls.append(list(label))
-    return imgs, lbls
+    return np.array(imgs, dtype=np.uint8), lbls
 
 def create_dataset(folder_path, info=False):
     # Informativo do load
@@ -90,10 +89,10 @@ def create_dataset(folder_path, info=False):
         iterables = [p1, p2, p3]
 
         for j in iterables:
-            for i in j:
-                img = i[0]
-                lbl = "-".join(i[1]) + ".png"
-                imsave("./three_way_dataset/" + lbl, img)
+            imgs, lbls = j
+            for img, lbl in zip(imgs,lbls):
+                lbl = "-".join(list(map(toStr, lbl))) + ".png"
+                imwrite("./three_way_dataset/" + lbl, img)
             
         # Info
         i+=1
@@ -101,4 +100,4 @@ def create_dataset(folder_path, info=False):
             print(f"{(i/total)*100}% concluido!")
 
 if __name__ == "__main__":
-    create_dataset("/media/work/datasets/contact-lens/orig/IIITD_Contact_Lens_Iris_DB/Cogent Scanner")
+    create_dataset("./media/work/datasets/contact-lens/crop/IIITD/Cogent Scanner")
