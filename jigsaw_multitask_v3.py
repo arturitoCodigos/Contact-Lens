@@ -63,7 +63,12 @@ def readDir(path="./three_way_dataset", info=True):
     for img_name in files:
         features.append(imread(os.path.join(path, img_name)))
         img_name = os.path.splitext(img_name)[0]
-        labels.append(oneHot(list(map(toInt, img_name.split("=")[1].split("-")))))
+        try:
+            labels.append(oneHot(list(map(toInt, img_name.split("=")[1].split("-")))))
+        except:
+            print(f"Erro no arquivo {img_name}")
+            features.pop()
+            continue
         if info:
             if (i%100 == 0):
                 print(f"Estamos no arquivo numero {i}!")
