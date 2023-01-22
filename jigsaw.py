@@ -2,8 +2,6 @@ import os
 import numpy as np
 from cv2 import imread, resize, imwrite
 
-uuid = 0
-
 three_way_partition = [[0, 1, 2, 
                         3, 4, 5, 
                         6, 7, 8],
@@ -73,6 +71,7 @@ def read_dir(path, multiplier=1):
     return np.array(imgs, dtype=np.uint8), lbls
 
 def create_dataset(folder_path, info=False):
+    uuid = 0
     # Informativo do load
     i = 0
     total = len(os.listdir(folder_path))
@@ -92,9 +91,11 @@ def create_dataset(folder_path, info=False):
 
         for j in iterables:
             imgs, lbls = j
-            for img, lbl in zip(imgs,lbls):
+            print("Quantidade de imagens: ", len(imgs))
+            for img, lbl in zip(imgs, lbls):
                 lbl = str(uuid) + '=' + "-".join(list(map(toStr, lbl))) + ".png"
                 imwrite("./three_way_dataset/" + lbl, img)
+                uuid += 1
             
         # Info
         i+=1
