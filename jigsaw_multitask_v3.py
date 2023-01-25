@@ -73,7 +73,7 @@ def readDir(path="./three_way_dataset", info=True):
             if (i%100 == 0):
                 print(f"Estamos no arquivo numero {i}!")
             i+=1
-    return np.array(features, dtype=object), np.array(labels, dtype=object)
+    return np.array(features), np.array(labels)
 
 def divideLabels(labels, info=True):
     o1, o2, o3 = [], [], []
