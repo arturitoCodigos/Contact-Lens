@@ -11,7 +11,7 @@ def read_dir(path):
     result = []
     for img in os.listdir(path):
         img = imread(os.path.join(path, img))
-        res = resize(img, dsize=(224, 224))
+        res = resize(img, dsize=(300, 300))
         result.append(list(res))
     return result
 
@@ -54,7 +54,7 @@ if __name__ == "__main__":
 
     x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.33, random_state=23, shuffle=True)
 
-    inputs = tf.keras.layers.Input(shape=(224,224,3))
+    inputs = tf.keras.layers.Input(shape=(300,300,3))
     neuralNet = tf.keras.models.load_model("./contact-lens-model-multitask_v3_b0")
     neuralNet = tf.keras.Model(inputs=inputs, outputs=neuralNet.get_layer("dense_3").output)
 
