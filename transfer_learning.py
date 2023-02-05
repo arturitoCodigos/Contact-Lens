@@ -53,8 +53,7 @@ if __name__ == "__main__":
     features, labels = lens_dataset()
 
     x_train, x_test, y_train, y_test = train_test_split(features, labels, test_size=0.33, random_state=23, shuffle=True)
-
-    #inputs = tf.keras.layers.Input(shape=(300,300,3))
+    """
     neuralNet = tf.keras.models.load_model("./contact-lens-model-multitask_v3_b0")
     neuralNet = tf.keras.Model(inputs=neuralNet.input, outputs=neuralNet.get_layer("dense_3").output)
 
@@ -66,14 +65,15 @@ if __name__ == "__main__":
     neuralNet = tf.keras.layers.Dense(3, activation="softmax")(neuralNet)  # Output
 
     """
+    inputs = tf.keras.layers.Input(shape=(300,300,3))
+    neuralNet = tf.keras.models.load_model("./contact-lens-model-multitask_v3_b0")
     neuralNet.trainable = False # O modelo base nao treina
-    pre_treinada_saida = tf.keras.layers.Dense(128, activation='relu')(neuralNet.output)
+    pre_treinada_saida = tf.keras.layers.Dense(128, activation='relu')(neuralNet.get_layer("dense_3").output)
     pre_treinada_saida = tf.keras.layers.Dense(64, activation='relu')(pre_treinada_saida)
     out = tf.keras.layers.Dense(3, activation="softmax")(pre_treinada_saida)  # Output
 
     # Construção do modelo
     neuralNet = tf.keras.Model(inputs, out)
-    """
 
     print("\n\n\n\nWhole model: ")
     neuralNet.summary()
