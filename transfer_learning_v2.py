@@ -28,7 +28,7 @@ def lens_dataset_csv(train_path="/media/work/datasets/contact-lens/orig/IIITD_Co
         for row in reader:
             img_path = row[0] # Path da imagem
             label    = row[1] # Label da imagem
-            x_train.append(list(resize(imread(os.path.join(base_path, img_path), dsize=(300, 300)))))
+            x_train.append(list(resize(imread(os.path.join(base_path, img_path)), dsize=(300, 300))))
             y_train.append(one_hot_encode_label(label))
     
     # Depois as de teste
@@ -37,7 +37,7 @@ def lens_dataset_csv(train_path="/media/work/datasets/contact-lens/orig/IIITD_Co
         for row in reader:
             img_path = row[0] # Path da imagem
             label    = row[1] # Label da imagem
-            x_test.append(list(resize(imread(os.path.join(base_path, img_path), dsize=(300, 300)))))
+            x_test.append(list(resize(imread(os.path.join(base_path, img_path)), dsize=(300, 300))))
             y_test.append(one_hot_encode_label(label))
     
     return np.array(x_train), np.array(x_test), np.array(y_train), np.array(y_test)
