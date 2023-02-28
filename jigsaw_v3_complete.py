@@ -64,7 +64,7 @@ def readDir(path, info=True):
             labels.append(oneHot(list(map(toInt, img_name_.split("=")[1].split("-")))))
         except:
             print(f"Erro no arquivo {img_name}, removendo-o...")
-            os.remove(img_name)
+            os.remove(os.path(path, img_name))
             continue
         if info:
             if (i%100 == 0):

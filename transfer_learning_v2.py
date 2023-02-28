@@ -25,6 +25,7 @@ def lens_dataset_csv(train_path="/media/work/datasets/contact-lens/orig/IIITD_Co
     # Primeiro carrego as imagens de treino
     with open(train_path, "r") as f:
         reader = csv.reader(f)
+        i=0
         for row in reader:
             img_path = row[0] # Path da imagem
             label    = row[1] # Label da imagem
@@ -46,21 +47,9 @@ if __name__ == "__main__":
     # Carregando o dataset
     x_train, x_test, y_train, y_test = lens_dataset_csv()
 
-    """
-    neuralNet = tf.keras.models.load_model("./contact-lens-model-multitask_v3_b0")
-    neuralNet = tf.keras.Model(inputs=neuralNet.input, outputs=neuralNet.get_layer("dense_3").output)
-
-    print("Transfer learning base: ")
-    neuralNet.summary()
-
-    neuralNet = tf.keras.layers.Dense(128, activation='relu')(neuralNet)
-    neuralNet = tf.keras.layers.Dense(64, activation='relu')(neuralNet)
-    neuralNet = tf.keras.layers.Dense(3, activation="softmax")(neuralNet)  # Output
-
-    """
     #inputs = tf.keras.layers.Input(shape=(300,300,3))
     neuralNet = tf.keras.models.load_model("./contact-lens-model-multitask_v3_b0", compile=False)
-    neuralNet.trainable = False # O modelo base nao treina
+    neuralNet.trainable = True # O modelo base nao treina
     pre_treinada_saida = tf.keras.layers.Dense(128, activation='relu', name="Grande")(neuralNet.get_layer("dense_3").output)
     pre_treinada_saida = tf.keras.layers.Dense(64, activation='relu', name="Camada")(pre_treinada_saida)
     out = tf.keras.layers.Dense(3, activation="softmax", name="Bacana")(pre_treinada_saida)  # Output
@@ -68,7 +57,6 @@ if __name__ == "__main__":
     # Construção do modelo
     neuralNet = tf.keras.Model(neuralNet.input, out)
 
-    print("\n\n\n\nWhole model: ")
     neuralNet.summary()
 
     neuralNet.compile(loss="categorical_crossentropy",

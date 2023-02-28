@@ -138,6 +138,7 @@ if __name__ == "__main__":
                         },
                         optimizer=tf.keras.optimizers.Adam(),
                         metrics=["accuracy"])
+
     neuralNet.fit(x_train,
                   {
                     'out1' : y_train_branch1, 
