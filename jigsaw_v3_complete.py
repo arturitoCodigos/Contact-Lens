@@ -40,17 +40,17 @@ def toInt(s):
 
 def oneHot(lbl):
     if lbl == three_way_partition[0]:
-        return 0
+        return [1,0,0,0,0,0]
     if lbl == three_way_partition[1]:
-        return 1
+        return [0,1,0,0,0,0]
     if lbl == three_way_partition[2]:
-        return 2
+        return [0,0,1,0,0,0]
     if lbl == three_way_partition[3]:
-        return 3
+        return [0,0,0,1,0,0]
     if lbl == three_way_partition[4]:
-        return 4
+        return [0,0,0,0,1,0]
     if lbl == three_way_partition[5]:
-        return 5
+        return [0,0,0,0,0,1]
 
 def readDir(path, info=True):
     labels = []
@@ -64,20 +64,21 @@ def readDir(path, info=True):
             labels.append(oneHot(list(map(toInt, img_name_.split("=")[1].split("-")))))
         except:
             print(f"Erro no arquivo {img_name}, removendo-o...")
-            os.remove(os.path(path, img_name))
+            os.remove(os.path.join(path, img_name))
             continue
         if info:
             if (i%100 == 0):
                 print(f"Estamos no arquivo numero {i}!")
             i+=1
-    return np.array(labels)
+    return labels
 
 if __name__ == "__main__":
     # Carregando o dataset
     y_branch1, y_branch2, y_branch3 = readDir("./three_way_dataset/dir_001"), readDir("./three_way_dataset/dir_002"), readDir("./three_way_dataset/dir_003")
-    labels = np.concatenate((y_branch1, y_branch2, y_branch3))
+    labels = y_branch1 + y_branch2 + y_branch3
 
-    train, test = tf.keras.utils.image_dataset_from_directory("./three_way_dataset", labels=labels, image_size=(300, 300), shuffle=True, seed=55, validation_split=0.2, subset="both")
+    train = tf.keras.preprocessing.image_dataset_from_directory("./three_way_dataset", labels=labels, image_size=(300, 300), shuffle=True, seed=55, validation_split=0.2, subset="training")
+    test = tf.keras.preprocessing.image_dataset_from_directory("./three_way_dataset", labels=labels, image_size=(300, 300), shuffle=True, seed=55, validation_split=0.2, subset="validation")
 
     # Neural Net em si
 
@@ -101,13 +102,12 @@ if __name__ == "__main__":
                                                      
     neuralNet.summary() # Resumo da rede
 
-    neuralNet.compile(loss="sparse_categorical_crossentropy",
+    neuralNet.compile(loss="categorical_crossentropy",
                         optimizer=tf.keras.optimizers.Adam(),
                         metrics=["accuracy"])
 
     neuralNet.fit(train,
                   epochs=40,
-                  validation_split=0.1,
                   verbose=1)
     
     print("\n\n\n\n EVALUATION NOW: \n\n\n\n")
