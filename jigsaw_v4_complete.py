@@ -5,7 +5,7 @@ import random
 import cv2
 
 
-class ImagenetDataLoader(keras.utils.Sequence):
+class ImagenetDataLoader(tf.keras.utils.Sequence):
     """
     Imagenet data loader.
     Based on: https://stackoverflow.com/questions/49510612/change-training-dataset-every-n-epochs-in-keras.
@@ -108,17 +108,20 @@ def readDir(path, info=True):
             i+=1
     return labels
 
+def listdir_fullpath(d):
+    return [os.path.join(d, f) for f in os.listdir(d)]
+
 if __name__ == "__main__":
 
     # Nomes dos arquivos
-    _x_train = os.listdir("./three_way_dataset/dir_001") + os.listdir("./three_way_dataset/dir_002") + os.listdir("./three_way_dataset/dir_003")
+    _x_train = listdir_fullpath("./three_way_dataset/dir_001") + listdir_fullpath("./three_way_dataset/dir_002") + listdir_fullpath("./three_way_dataset/dir_003")
 
     # Labels
     y_branch1, y_branch2 = readDir("./three_way_dataset/dir_001"), readDir("./three_way_dataset/dir_002")
     _y_train = y_branch1 + y_branch2
 
     # Val set
-    _x_test = os.listdir("./three_way_dataset/dir_003")
+    _x_test = listdir_fullpath("./three_way_dataset/dir_003")
     _y_test = readDir("./three_way_dataset/dir_003")
 
 
