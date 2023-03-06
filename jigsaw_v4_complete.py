@@ -4,6 +4,30 @@ import tensorflow as tf
 import random
 import cv2
 
+from skimage.io import imread
+from skimage.transform import resize
+import numpy as np
+import math
+
+class SequenceReader(tf.keras.utils.Sequence):
+
+    def __init__(self, x_set, y_set, batch_size):
+        self.x, self.y = x_set, y_set
+        self.batch_size = batch_size
+
+    def __len__(self):
+        return math.ceil(len(self.x) / self.batch_size)
+
+    def __getitem__(self, idx):
+        batch_x = self.x[idx * self.batch_size:(idx + 1) *
+        self.batch_size]
+        batch_y = self.y[idx * self.batch_size:(idx + 1) *
+        self.batch_size]
+
+        return np.array([
+            resize(imread(file_name), (300, 300))
+               for file_name in batch_x]), np.array(batch_y)
+
 
 class ImagenetDataLoader(tf.keras.utils.Sequence):
     """
@@ -125,11 +149,9 @@ if __name__ == "__main__":
     _y_test = readDir("./three_way_dataset/dir_003")
 
 
-    train_data_gen = ImagenetDataLoader(x_set=_x_train,
-                                        y_set=tf.keras.utils.to_categorical(_y_train, num_classes=6),
-                                        load_input_shape=(300,300,3),
-                                        net_input_shape=(300,300,3),
-                                        batch_size=32)
+    train_data_gen = SequenceReader(_x_train,
+                                    tf.keras.utils.to_categorical(_y_train, num_classes=6),
+                                    32)
 
 
     # Neural Net em si
