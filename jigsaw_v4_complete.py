@@ -76,17 +76,17 @@ def toInt(s):
 
 def oneHot(lbl):
     if lbl == three_way_partition[0]:
-        return [1,0,0,0,0,0]
+        return 0
     if lbl == three_way_partition[1]:
-        return [0,1,0,0,0,0]
+        return 1
     if lbl == three_way_partition[2]:
-        return [0,0,1,0,0,0]
+        return 2
     if lbl == three_way_partition[3]:
-        return [0,0,0,1,0,0]
+        return 3
     if lbl == three_way_partition[4]:
-        return [0,0,0,0,1,0]
+        return 4
     if lbl == three_way_partition[5]:
-        return [0,0,0,0,0,1]
+        return 5
 
 def readDir(path, info=True):
     labels = []
@@ -126,7 +126,7 @@ if __name__ == "__main__":
 
 
     train_data_gen = ImagenetDataLoader(x_set=_x_train,
-                                        y_set=_y_train,
+                                        y_set=tf.keras.utils.to_categorical(_y_train, num_classes=6),
                                         load_input_shape=(300,300,3),
                                         net_input_shape=(300,300,3),
                                         batch_size=32)
@@ -161,7 +161,7 @@ if __name__ == "__main__":
     neuralNet.fit(train_data_gen,
                   shuffle=True,
                   epochs=40,
-                  validation_data=(_x_test, _y_test),
+                  validation_data=(_x_test, tf.keras.utils.to_categorical(_y_test, num_classes=6)),
                   verbose=1)
     
     #print("\n\n\n\n EVALUATION NOW: \n\n\n\n")
