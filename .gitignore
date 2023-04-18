@@ -2,3 +2,7 @@ virtualenv
 imgs
 img2
 a.py
+vision_transformer.py
+db
+test
+test_output

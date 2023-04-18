@@ -137,6 +137,8 @@ def listdir_fullpath(d):
 
 if __name__ == "__main__":
 
+    #PROBLEMA NOS TAMANHOSSSSSSSSS
+
     # Nomes dos arquivos
     _x_train = listdir_fullpath("./three_way_dataset/dir_001") + listdir_fullpath("./three_way_dataset/dir_002") + listdir_fullpath("./three_way_dataset/dir_003")
 
@@ -158,7 +160,7 @@ if __name__ == "__main__":
 
     # Modelo 1 --> Soprado da documentação do keras
 
-    inputs = tf.keras.layers.Input(shape=(300,300,3))
+    inputs = tf.keras.layers.Input(shape=(32,300,300,3))
     pre_treinada_saida = inputs
 
     main_branch = tf.keras.applications.EfficientNetB0(weights="imagenet", input_tensor=pre_treinada_saida, include_top=False)

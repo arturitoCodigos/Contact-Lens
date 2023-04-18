@@ -27,6 +27,9 @@ def lens_dataset_csv(train_path="/media/work/datasets/contact-lens/orig/IIITD_Co
         reader = csv.reader(f)
         i=0
         for row in reader:
+            if i == 0:
+                i+=1
+                continue
             img_path = row[0] # Path da imagem
             label    = row[1] # Label da imagem
             x_train.append(list(resize(imread(os.path.join(base_path, img_path)), dsize=(300, 300))))
