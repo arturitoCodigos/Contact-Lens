@@ -8,7 +8,6 @@ from math import floor
 def crop(base, path, x, y, r):
     try:
         img = imread(os.path.join(base, path))
-        w, h, _ = img.shape
         imwrite(os.path.join("/media/work/arthurcosta/Contact-Lens/test_output/media/work/datasets/contact-lens/crop/IIITD", path), 
                 img[max(0, floor(y-r-(r*0.1))):floor(y+r+(r*0.1)), 
                     max(0, floor(x-r-(r*0.1))):floor(x+r+(r*0.1))])
